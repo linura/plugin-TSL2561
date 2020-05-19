@@ -3,18 +3,14 @@
 	"name" : "TSL2561",
 	"description" : "Plugin TSL2561 pour la création de plugin",
 	"licence" : "AGPL",
-	"author" : "Jeedom SAS",
+	"author" : "Linura",
 	"require" : "3.2",
-	"category" : "programming",
-	"hasDependency" : false,
+	"category" : "automation protocol",
+	"hasDependency" : true,
 	"hasOwnDeamon" : false,
 	"maxDependancyInstallTime" : 0,
 	"changelog" : "https://jeedom.github.io/plugin-template/#language#/changelog",
 	"documentation" : "https://jeedom.github.io/plugin-template/#language#/",
-	"link" : {
-		"forum":"Lien vers le forum",
-		"video" : "Lien vers une video"
-	},
 	"language" : ["fr_FR","en_US","de_DE","sp_SP","ru_RU","id_ID","it_IT"],
-	"compatibility" : ["miniplus","smart","rpi","docker","diy","mobile"]
+	"compatibility" : ["rpi","mobile"]
 }
