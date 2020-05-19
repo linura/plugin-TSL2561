@@ -30,10 +30,8 @@ class TSL2561 extends eqLogic {
      /* Fonction exécutée automatiquement toutes les minutes par Jeedom*/
       public static function cron() {
         foreach (self::byType('TSL2561') as $TSL2561) { //parcours tous les équipements du plugin vdm
-            log::add('TSL2561', 'debug', 'detect tsl cron');
             if ($TSL2561->getIsEnable() == 1) { //vérifie que l'équipement est actif
                 foreach ($TSL2561->getCmd('info') as $cmd) {
-                    log::add('TSL2561', 'debug', 'cron execute');
                     $cmd->execCmd(); // la commande existe on la lance
                 }
             }
@@ -137,29 +135,29 @@ class TSL2561 extends eqLogic {
 	}
 
     public function getlux(){
-        $gain = $this->getConfiguration('gain');
+    /*    $gain = $this->getConfiguration('gain');
         $inte_time = $this->getConfiguration('integration_time');
         $lux = exec(system::getCmdSudo() . 'python3 html/plugins/TSL2561/core/py/./TSL2561.py '. $gain .' '. $inte_time .' 1');
         log::add('TSL2561', 'debug', 'getLux');
-        //return $lux;
+        return $lux;*/
         return 10;
     }
 
     public function getbroadband(){
-        $gain = $this->getConfiguration('gain');
+    /*    $gain = $this->getConfiguration('gain');
         $inte_time = $this->getConfiguration('integration_time');
         $broadband = exec(system::getCmdSudo() . 'python3 html/plugins/TSL2561/core/py/./TSL2561.py '. $gain .' '. $inte_time .' 2');
         log::add('TSL2561', 'debug', 'getBroadband');
-        //return $broadband;
+        return $broadband; */
         return 50;
     }
 
     public function getinfrared(){
-        $gain = $this->getConfiguration('gain');
+    /*    $gain = $this->getConfiguration('gain');
         $inte_time = $this->getConfiguration('integration_time');
         $infrared = exec(system::getCmdSudo() . 'python3 html/plugins/TSL2561/core/py/./TSL2561.py '. $gain .' '. $inte_time .' 3');
         log::add('TSL2561', 'debug', 'getInfrared');
-        //return $infrared;
+        return $infrared; */
         return 20;
     }
 
