@@ -26,12 +26,15 @@ class TSL2561 extends eqLogic {
 
     /*     * ***********************Methode static*************************** */
 
-    /*
-     * Fonction exécutée automatiquement toutes les minutes par Jeedom
+    
+     /* Fonction exécutée automatiquement toutes les minutes par Jeedom*/
       public static function cron() {
-
+        foreach (self::byType('TSL2561') as $TSL2561) { //parcours tous les équipements du plugin vdm
+            if ($TSL2561->getIsEnable() == 1) { //vérifie que l'équipement est actif
+                $this->execCmd(); // la commande existe on la lance
+            }
+        }
       }
-     */
 
 
     /*
