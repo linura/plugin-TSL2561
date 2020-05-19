@@ -185,6 +185,7 @@ class TSL2561Cmd extends cmd {
 
         $eqlogic = $this->getEqLogic(); //récupère l'éqlogic de la commande $this
         $info = $eqlogic->getlux();  //On lance la fonction randomVdm() pour récupérer une vdm et on la stocke dans la variable $info
+        log::add('TLS2561','debug','eqlogic ' . $eqlogic->getname() . 'Info ' . $info);
         $eqlogic->checkAndUpdateCmd('Lux', $info); // on met à jour la commande avec le LogicalId de l'eqlogic
         $info = $eqlogic->getbroadband();
         $eqlogic->checkAndUpdateCmd('Broadband', $info); // on met à jour la commande avec le LogicalId de l'eqlogic
