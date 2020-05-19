@@ -1,7 +1,7 @@
 {
-	"id" : "template",
-	"name" : "Template",
-	"description" : "Plugin template pour la création de plugin",
+	"id" : "TSL2561",
+	"name" : "TSL2561",
+	"description" : "Plugin TSL2561 pour la création de plugin",
 	"licence" : "AGPL",
 	"author" : "Jeedom SAS",
 	"require" : "3.2",
