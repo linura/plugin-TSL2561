@@ -26,7 +26,14 @@ class TSL2561 extends eqLogic {
 
     /*     * ***********************Methode static*************************** */
 
-    
+    public function event()
+	{
+		foreach (eqLogic::byType('TSL2563') as $eqLogic) {
+			if ($eqLogic->getId() == init('id')) {
+				$eqLogic->scan();
+			}
+		}
+	}
      /* Fonction exécutée automatiquement toutes les minutes par Jeedom*/
       public static function cron() {
         foreach (self::byType('TSL2561') as $TSL2561) { //parcours tous les équipements du plugin vdm
@@ -34,6 +41,12 @@ class TSL2561 extends eqLogic {
                 foreach ($TSL2561->getCmd('info') as $cmd) {
                     log::add('TSL2561', 'debug', 'cron execute ');
                     $cmd->execCmd(); // la commande existe on la lance
+                    $value = $cmd->formatValue($cmd->execute());
+
+						if ($cmd->execCmd(null, 2) != $value) {
+
+							$cmd->event($value);
+						}
                 }
             }
         }
