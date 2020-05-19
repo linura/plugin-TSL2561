@@ -65,7 +65,38 @@ class TSL2561 extends eqLogic {
     }
 
     public function postSave() {
-        
+        $info = $this->getCmd(null, 'Lux');
+        if (!is_object($info)) {
+            $info = new TSL2561Cmd();
+            $info->setName(__('Lux', __FILE__));
+        }
+        $info->setLogicalId('Lux');
+        $info->setEqLogic_id($this->getId());
+        $info->setType('info');
+        $info->setSubType('numeric');
+        $info->save();
+
+        $info = $this->getCmd(null, 'Broadband');
+        if (!is_object($info)) {
+            $info = new TSL2561Cmd();
+            $info->setName(__('Broadband', __FILE__));
+        }
+        $info->setLogicalId('Broadband');
+        $info->setEqLogic_id($this->getId());
+        $info->setType('info');
+        $info->setSubType('numeric');
+        $info->save();
+
+        $info = $this->getCmd(null, 'Infrared');
+        if (!is_object($info)) {
+            $info = new TSL2561Cmd();
+            $info->setName(__('Infrared', __FILE__));
+        }
+        $info->setLogicalId('Infrared');
+        $info->setEqLogic_id($this->getId());
+        $info->setType('info');
+        $info->setSubType('numeric');
+        $info->save();
     }
 
     public function preUpdate() {
@@ -84,24 +115,43 @@ class TSL2561 extends eqLogic {
         
     }
 
-    /*
-     * Non obligatoire mais permet de modifier l'affichage du widget si vous en avez besoin
-      public function toHtml($_version = 'dashboard') {
+    public static function dependancy_info() {
+        $return = array();
+        $return['progress_file'] = jeedom::getTmpFolder('TLS2561') . '/dependance';
+        $return['state'] = 'ok';
+        if (exec(system::getCmdSudo() . "python3 -c 'import adafruit_tsl2561' 2>/dev/null && echo oui || echo non ") == 'non') $return['state'] = 'nok'; 
+        if ($return['state'] == 'nok') message::add('TLS2561', __('Si les dépendances sont/restent NOK, veuillez mettre à jour votre système linux, puis relancer l\'installation des dépendances générales. Merci', __FILE__));
+        return $return;
+        }
 
-      }
-     */
+    public static function dependancy_install() {
+		log::remove(__CLASS__ . '_update');
+		return array('script' => dirname(__FILE__) . '/../../resources/install_#stype#.sh ' . jeedom::getTmpFolder('TLS2561') . '/dependance', 'log' => log::getPathToLog(__CLASS__ . '_update'));
+	}
 
-    /*
-     * Non obligatoire mais ca permet de déclencher une action après modification de variable de configuration
-    public static function postConfig_<Variable>() {
+    public function getlux(){
+        $gain = $this->getConfiguration('gain');
+        $inte_time = $this->getConfiguration('integration_time');
+        $lux = exec(system::getCmdSudo() . 'python3 html/plugins/TSL2561/core/py/./TSL2561.py '. $gain .' '. $inte_time .' 1');
+        log::add('TSL2561', 'debug', 'getLux');
+        return $lux;
     }
-     */
 
-    /*
-     * Non obligatoire mais ca permet de déclencher une action avant modification de variable de configuration
-    public static function preConfig_<Variable>() {
+    public function getbroadband(){
+        $gain = $this->getConfiguration('gain');
+        $inte_time = $this->getConfiguration('integration_time');
+        $broadband = exec(system::getCmdSudo() . 'python3 html/plugins/TSL2561/core/py/./TSL2561.py '. $gain .' '. $inte_time .' 2');
+        log::add('TSL2561', 'debug', 'getBroadband');
+        return $broadband;
     }
-     */
+
+    public function getinfrared(){
+        $gain = $this->getConfiguration('gain');
+        $inte_time = $this->getConfiguration('integration_time');
+        $infrared = exec(system::getCmdSudo() . 'python3 html/plugins/TSL2561/core/py/./TSL2561.py '. $gain .' '. $inte_time .' 3');
+        log::add('TSL2561', 'debug', 'getInfrared');
+        return $infrared;
+    }
 
     /*     * **********************Getteur Setteur*************************** */
 }
@@ -123,7 +173,18 @@ class TSL2561Cmd extends cmd {
      */
 
     public function execute($_options = array()) {
-        
+
+        $eqlogic = $this->getEqLogic(); //récupère l'éqlogic de la commande $this
+        switch ($this->getLogicalId()) {    //vérifie le logicalid de la commande
+            case 'refresh': // LogicalId de la commande rafraîchir que l’on a créé dans la méthode Postsave de la classe vdm .
+                $info = $eqlogic->getlux();  //On lance la fonction randomVdm() pour récupérer une vdm et on la stocke dans la variable $info
+                $eqlogic->checkAndUpdateCmd('Lux', $info); // on met à jour la commande avec le LogicalId de l'eqlogic
+                $info = $eqlogic->getbroadband();
+                $eqlogic->checkAndUpdateCmd('Broadband', $info); // on met à jour la commande avec le LogicalId de l'eqlogic
+                $info = $eqlogic->getinfrared();
+                $eqlogic->checkAndUpdateCmd('Infrared', $info);
+                break;
+        }
     }
 
     /*     * **********************Getteur Setteur*************************** */
