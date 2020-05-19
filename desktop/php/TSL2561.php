@@ -94,9 +94,14 @@ foreach (jeeObject::all() as $object) {
 		</div>
 	</div>
        <div class="form-group">
-        <label class="col-sm-3 control-label">{{TSL2561 param 1}}</label>
+        <label class="col-sm-3 control-label">{{Gain}}</label>
         <div class="col-sm-3">
-            <input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="city" placeholder="param1"/>
+            <input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="Gain" placeholder="Gain"/>
+        </div>
+        <div class="form-group">
+        <label class="col-sm-3 control-label">{{Intergration Time}}</label>
+        <div class="col-sm-3">
+            <input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="int_time" placeholder="Intergration Time"/>
         </div>
     </div>
 </fieldset>
@@ -107,7 +112,11 @@ foreach (jeeObject::all() as $object) {
 <table id="table_cmd" class="table table-bordered table-condensed">
     <thead>
         <tr>
-            <th>{{Nom}}</th><th>{{Type}}</th><th>{{Action}}</th>
+            <th>{{Nom}}</th>
+            <th>{{Type}}</th>
+            <th>{{Configuration}}</th>
+            <th>{{Options}}</th>
+            <th>{{Action}}</th>
         </tr>
     </thead>
     <tbody>
