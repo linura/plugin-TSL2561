@@ -139,7 +139,8 @@ class TSL2561 extends eqLogic {
         $inte_time = $this->getConfiguration('integration_time');
         $lux = exec(system::getCmdSudo() . 'python3 html/plugins/TSL2561/core/py/./TSL2561.py '. $gain .' '. $inte_time .' 1');
         log::add('TSL2561', 'debug', 'getLux');
-        return $lux;
+        //return $lux;
+        return 10;
     }
 
     public function getbroadband(){
@@ -147,7 +148,8 @@ class TSL2561 extends eqLogic {
         $inte_time = $this->getConfiguration('integration_time');
         $broadband = exec(system::getCmdSudo() . 'python3 html/plugins/TSL2561/core/py/./TSL2561.py '. $gain .' '. $inte_time .' 2');
         log::add('TSL2561', 'debug', 'getBroadband');
-        return $broadband;
+        //return $broadband;
+        return 50;
     }
 
     public function getinfrared(){
@@ -155,7 +157,8 @@ class TSL2561 extends eqLogic {
         $inte_time = $this->getConfiguration('integration_time');
         $infrared = exec(system::getCmdSudo() . 'python3 html/plugins/TSL2561/core/py/./TSL2561.py '. $gain .' '. $inte_time .' 3');
         log::add('TSL2561', 'debug', 'getInfrared');
-        return $infrared;
+        //return $infrared;
+        return 20;
     }
 
     /*     * **********************Getteur Setteur*************************** */
