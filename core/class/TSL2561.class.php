@@ -32,7 +32,7 @@ class TSL2561 extends eqLogic {
         foreach (self::byType('TSL2561') as $TSL2561) { //parcours tous les équipements du plugin vdm
             if ($TSL2561->getIsEnable() == 1) { //vérifie que l'équipement est actif
                 foreach ($TSL2561->getCmd('info') as $cmd) {
-                    log::add('TSL2561', 'debug', 'cron execute '.$cmd);
+                    log::add('TSL2561', 'debug', 'cron execute ');
                     $cmd->execCmd(); // la commande existe on la lance
                 }
             }
@@ -182,7 +182,7 @@ class TSL2561Cmd extends cmd {
      */
 
     public function execute($_options = array()) {
-
+        log::add('TLS2561','debug','fonction execute');
         $eqlogic = $this->getEqLogic(); //récupère l'éqlogic de la commande $this
         $info = $eqlogic->getlux();  //On lance la fonction randomVdm() pour récupérer une vdm et on la stocke dans la variable $info
         log::add('TLS2561','debug','eqlogic ' . $eqlogic->getname() . 'Info ' . $info);
