@@ -51,7 +51,7 @@ sudo pip3 install adafruit-circuitpython-tsl2561
 echo 100 > ${PROGRESS_FILE}
 echo "-"
 echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-echo "Fin de l'installation des dependances DHT					  "
+echo "Fin de l'installation des dependances tsl2561					  "
 echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
 sudo chmod -R 755 ${PROGRESS_FILE}
 rm ${PROGRESS_FILE}
