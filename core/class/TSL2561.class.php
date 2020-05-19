@@ -32,7 +32,7 @@ class TSL2561 extends eqLogic {
         foreach (self::byType('TSL2561') as $TSL2561) { //parcours tous les équipements du plugin vdm
             if ($TSL2561->getIsEnable() == 1) { //vérifie que l'équipement est actif
                 foreach ($TSL2561->getCmd('info') as $cmd) {
-                    log::add('TSL2561', 'debug', 'cron execute');
+                    log::add('TSL2561', 'debug', 'cron execute '.$cmd);
                     $cmd->execCmd(); // la commande existe on la lance
                 }
             }
