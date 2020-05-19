@@ -32,6 +32,7 @@ class TSL2561 extends eqLogic {
         foreach (self::byType('TSL2561') as $TSL2561) { //parcours tous les équipements du plugin vdm
             if ($TSL2561->getIsEnable() == 1) { //vérifie que l'équipement est actif
                 foreach ($TSL2561->getCmd('info') as $cmd) {
+                    log::add('TSL2561', 'debug', 'cron execute');
                     $cmd->execCmd(); // la commande existe on la lance
                 }
             }
@@ -183,16 +184,12 @@ class TSL2561Cmd extends cmd {
     public function execute($_options = array()) {
 
         $eqlogic = $this->getEqLogic(); //récupère l'éqlogic de la commande $this
-        switch ($this->getLogicalId()) {    //vérifie le logicalid de la commande
-            case 'refresh': // LogicalId de la commande rafraîchir que l’on a créé dans la méthode Postsave de la classe vdm .
-                $info = $eqlogic->getlux();  //On lance la fonction randomVdm() pour récupérer une vdm et on la stocke dans la variable $info
-                $eqlogic->checkAndUpdateCmd('Lux', $info); // on met à jour la commande avec le LogicalId de l'eqlogic
-                $info = $eqlogic->getbroadband();
-                $eqlogic->checkAndUpdateCmd('Broadband', $info); // on met à jour la commande avec le LogicalId de l'eqlogic
-                $info = $eqlogic->getinfrared();
-                $eqlogic->checkAndUpdateCmd('Infrared', $info);
-                break;
-        }
+        $info = $eqlogic->getlux();  //On lance la fonction randomVdm() pour récupérer une vdm et on la stocke dans la variable $info
+        $eqlogic->checkAndUpdateCmd('Lux', $info); // on met à jour la commande avec le LogicalId de l'eqlogic
+        $info = $eqlogic->getbroadband();
+        $eqlogic->checkAndUpdateCmd('Broadband', $info); // on met à jour la commande avec le LogicalId de l'eqlogic
+        $info = $eqlogic->getinfrared();
+        $eqlogic->checkAndUpdateCmd('Infrared', $info);
     }
 
     /*     * **********************Getteur Setteur*************************** */
