@@ -37,6 +37,16 @@ function addCmdToTable(_cmd) {
     tr += '<span class="subType" subType="' + init(_cmd.subType) + '"></span>';
     tr += '</td>';
     tr += '<td>';
+    tr += '<span><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isHistorized" /> {{Historiser}}<br/></span>';
+    tr += '<span><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isVisible" /> {{Affichage}}<br/></span>';
+    tr += '</td>';
+    tr += '<td>';
+    tr += '<input class="cmdAttr form-control tooltips input-sm" data-l1key="unite"  style="width : 100px;" placeholder="Unité" title="{{Unité}}">';
+    tr += '<input class="tooltips cmdAttr form-control input-sm " data-l1key="configuration" data-l2key="minValue" placeholder="{{Min}}" title="{{Min}}" style="margin-top : 5px;margin-top: 5px;width: 40px;float: left;margin-right: 5px;margin-bottom: 5px;"> ';
+    tr += '<input class="tooltips cmdAttr form-control input-sm " data-l1key="configuration" data-l2key="maxValue" placeholder="{{Max}}" title="{{Max}}" style="margin-top : 5px;width: 40px;float: left;">';
+    tr += '<input  class="tooltips cmdAttr form-control input-sm " data-l1key="configuration" data-l2key="decimal" placeholder="{{Nb décimal}}" title="{{Nb décimal}}" style="margin-top : 5px;">';
+    tr += '</td>';
+    tr += '<td>';
     if (is_numeric(_cmd.id)) {
         tr += '<a class="btn btn-default btn-xs cmdAction" data-action="configure"><i class="fa fa-cogs"></i></a> ';
         tr += '<a class="btn btn-default btn-xs cmdAction" data-action="test"><i class="fa fa-rss"></i> {{Tester}}</a>';
