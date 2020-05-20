@@ -26,6 +26,7 @@
 # argument 1 type de sonde gain -> 0=1x, 1=16x
 # argument 2 integration time (0=13.7ms, 1=101ms, 2=402ms, or 3=manual)
 # argument 3 lecture souhaitée 1 - lux 2 broadband 3 infrared
+# argument 4 nombre de decimal pour lux
 
 import time
 import board
@@ -57,10 +58,10 @@ tsl.integration_time = integration_time
 broadband = tsl.broadband
 infrared = tsl.infrared
 lux = tsl.lux
- 
+nb_decimal = int( sys.argv[4] )
 # Print results
 if interest == 1:
-    print("{}".format(lux))
+    print("{:06." + nb_decimal + "f}".format(lux))
 if interest == 2:
     print("{}".format(broadband))
 if interest == 3:
