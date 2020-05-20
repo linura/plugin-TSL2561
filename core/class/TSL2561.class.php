@@ -124,6 +124,7 @@ class TSL2561 extends eqLogic
         $nb_decimal = $this->getConfiguration('decimal');
         log::add('TSL2561', 'debug', 'gain '. $gain);
         log::add('TSL2561', 'debug', 'time '. $inte_time);
+        log::add('TSL2561', 'debug', 'nb_decimal '. $nb_decimal);
         $lux = exec(system::getCmdSudo() . 'python3 html/plugins/TSL2561/core/py/./TSL2561.py '. $gain .' '. $inte_time .' 1');
         log::add('TSL2561', 'debug', 'getLux '. $lux);
         return number_format($lux,$nb_decimal);
