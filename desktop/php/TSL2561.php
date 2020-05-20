@@ -94,13 +94,13 @@ foreach (jeeObject::all() as $object) {
 		</div>
 	</div>
        <div class="form-group">
-        <label class="col-sm-3 control-label">{{Gain <br> 0=1x, 1=16x}}</label>
+        <label class="col-sm-3 control-label">{{Gain}} <br> {{0=1x, 1=16x}}</label>
         <div class="col-sm-3">
             <input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="Gain" placeholder="1"/>
         </div>
         </div>
         <div class="form-group">
-        <label class="col-sm-3 control-label">{{Temps d'integration <br> (0=13.7ms, 1=101ms, 2=402ms, or 3=manual)</label>
+        <label class="col-sm-3 control-label">{{Temps d'integration}} <br> {{(0=13.7ms, 1=101ms, 2=402ms, or 3=manual)</label>
         <div class="col-sm-3">
             <input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="int_time" placeholder="2"/>
         </div>
