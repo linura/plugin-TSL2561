@@ -19,15 +19,16 @@
 /* * ***************************Includes********************************* */
 require_once __DIR__  . '/../../../../core/php/core.inc.php';
 
-class TSL2561 extends eqLogic {
+class TSL2561 extends eqLogic
+{
     /*     * *************************Attributs****************************** */
 
 
 
     /*     * ***********************Methode static*************************** */
 
-     /* Fonction exécutée automatiquement toutes les minutes par Jeedom*/
-      public static function cron() {
+    /* Fonction exécutée automatiquement toutes les minutes par Jeedom*/
+    /*      public static function cron() {
         foreach (self::byType('TSL2561') as $TSL2561) { //parcours tous les équipements du plugin vdm
             if ($TSL2561->getIsEnable() == 1) { //vérifie que l'équipement est actif
                 $cmd = $TSL2561->getCmd(null, 'refresh'); //retourne la commande "refresh si elle existe
@@ -38,7 +39,30 @@ class TSL2561 extends eqLogic {
             }
         }
       }
+      */
+    public function event(){
+        foreach (eqLogic::byType('TSL2561') as $eqLogic) {
+            if ($eqLogic->getId() == init('id')) {
+                $eqLogic->scan();
+            }
+        }
+    }
+    public static function cron(){
+        foreach (eqLogic::byType('TSL2561') as $eqLogic) {
+            if ($eqLogic->getIsEnable() == 1) {
+                foreach ($eqLogic->getCmd('info') as $cmd) {
 
+                    log::add('monhistory', 'info', 'Cron lancé');
+                    $value = $cmd->formatValue($cmd->execute());
+
+                    if ($cmd->execCmd(null, 2) != $value) {
+
+                        $cmd->event($value);
+                    }
+                }
+            }
+        }
+    }
     /*
      * Fonction exécutée automatiquement toutes les heures par Jeedom
       public static function cronHourly() {
@@ -57,19 +81,20 @@ class TSL2561 extends eqLogic {
 
     /*     * *********************Méthodes d'instance************************* */
 
-    public function preInsert() {
-        
+    public function preInsert()
+    {
     }
 
-    public function postInsert() {
-        
+    public function postInsert()
+    {
     }
 
-    public function preSave() {
-        
+    public function preSave()
+    {
     }
 
-    public function postSave() {
+    public function postSave()
+    {
         $info = $this->getCmd(null, 'Lux');
         if (!is_object($info)) {
             $info = new TSL2561Cmd();
@@ -115,41 +140,45 @@ class TSL2561 extends eqLogic {
         $refresh->save();
     }
 
-    public function preUpdate() {
-        
+    public function preUpdate()
+    {
     }
 
-    public function postUpdate() {
+    public function postUpdate()
+    {
         $cmd = $this->getCmd(null, 'refresh'); // On recherche la commande refresh de l’équipement
         if (is_object($cmd)) { //elle existe et on lance la commande
             $cmd->execCmd();
         }
     }
 
-    public function preRemove() {
-        
+    public function preRemove()
+    {
     }
 
-    public function postRemove() {
-        
+    public function postRemove()
+    {
     }
 
-    public static function dependancy_info() {
+    public static function dependancy_info()
+    {
         $return = array();
         $return['progress_file'] = jeedom::getTmpFolder('TLS2561') . '/dependance';
         $return['state'] = 'ok';
-        if (exec(system::getCmdSudo() . "python3 -c 'import adafruit_tsl2561' 2>/dev/null && echo oui || echo non ") == 'non') $return['state'] = 'nok'; 
+        if (exec(system::getCmdSudo() . "python3 -c 'import adafruit_tsl2561' 2>/dev/null && echo oui || echo non ") == 'non') $return['state'] = 'nok';
         if ($return['state'] == 'nok') message::add('TLS2561', __('Si les dépendances sont/restent NOK, veuillez mettre à jour votre système linux, puis relancer l\'installation des dépendances générales. Merci', __FILE__));
         return $return;
-        }
+    }
 
-    public static function dependancy_install() {
-		log::remove(__CLASS__ . '_update');
-		return array('script' => dirname(__FILE__) . '/../../resources/install_#stype#.sh ' . jeedom::getTmpFolder('TLS2561') . '/dependance', 'log' => log::getPathToLog(__CLASS__ . '_update'));
-	}
+    public static function dependancy_install()
+    {
+        log::remove(__CLASS__ . '_update');
+        return array('script' => dirname(__FILE__) . '/../../resources/install_#stype#.sh ' . jeedom::getTmpFolder('TLS2561') . '/dependance', 'log' => log::getPathToLog(__CLASS__ . '_update'));
+    }
 
-    public function getlux(){
-    /*    $gain = $this->getConfiguration('gain');
+    public function getlux()
+    {
+        /*    $gain = $this->getConfiguration('gain');
         $inte_time = $this->getConfiguration('integration_time');
         $lux = exec(system::getCmdSudo() . 'python3 html/plugins/TSL2561/core/py/./TSL2561.py '. $gain .' '. $inte_time .' 1');
         log::add('TSL2561', 'debug', 'getLux');
@@ -157,8 +186,9 @@ class TSL2561 extends eqLogic {
         return 10;
     }
 
-    public function getbroadband(){
-    /*    $gain = $this->getConfiguration('gain');
+    public function getbroadband()
+    {
+        /*    $gain = $this->getConfiguration('gain');
         $inte_time = $this->getConfiguration('integration_time');
         $broadband = exec(system::getCmdSudo() . 'python3 html/plugins/TSL2561/core/py/./TSL2561.py '. $gain .' '. $inte_time .' 2');
         log::add('TSL2561', 'debug', 'getBroadband');
@@ -166,8 +196,9 @@ class TSL2561 extends eqLogic {
         return 50;
     }
 
-    public function getinfrared(){
-    /*    $gain = $this->getConfiguration('gain');
+    public function getinfrared()
+    {
+        /*    $gain = $this->getConfiguration('gain');
         $inte_time = $this->getConfiguration('integration_time');
         $infrared = exec(system::getCmdSudo() . 'python3 html/plugins/TSL2561/core/py/./TSL2561.py '. $gain .' '. $inte_time .' 3');
         log::add('TSL2561', 'debug', 'getInfrared');
@@ -178,7 +209,8 @@ class TSL2561 extends eqLogic {
     /*     * **********************Getteur Setteur*************************** */
 }
 
-class TSL2561Cmd extends cmd {
+class TSL2561Cmd extends cmd
+{
     /*     * *************************Attributs****************************** */
 
 
@@ -194,11 +226,12 @@ class TSL2561Cmd extends cmd {
       }
      */
 
-    public function execute($_options = array()) {
-        log::add('TLS2561','debug','fonction execute');
+    public function execute($_options = array())
+    {
+        log::add('TLS2561', 'debug', 'fonction execute');
         $eqlogic = $this->getEqLogic(); //récupère l'éqlogic de la commande $this
         $info = $eqlogic->getlux();  //On lance la fonction randomVdm() pour récupérer une vdm et on la stocke dans la variable $info
-        log::add('TLS2561','debug','eqlogic ' . $eqlogic->getname() . 'Info ' . $info);
+        log::add('TLS2561', 'debug', 'eqlogic ' . $eqlogic->getname() . 'Info ' . $info);
         $eqlogic->checkAndUpdateCmd('Lux', $info); // on met à jour la commande avec le LogicalId de l'eqlogic
         $info = $eqlogic->getbroadband();
         $eqlogic->checkAndUpdateCmd('Broadband', $info); // on met à jour la commande avec le LogicalId de l'eqlogic
@@ -208,5 +241,3 @@ class TSL2561Cmd extends cmd {
 
     /*     * **********************Getteur Setteur*************************** */
 }
-
-
