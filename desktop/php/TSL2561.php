@@ -98,6 +98,7 @@ foreach (jeeObject::all() as $object) {
         <label class="col-sm-3 control-label">{{0=1x, 1=16x}}</label>
         <div class="col-sm-3">
             <input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="Gain" placeholder="1"/>
+        </div>
         <label class="col-sm-3 control-label">{{Temps d'integration}}</label>
         <label class="col-sm-3 control-label">{{(0=13.7ms, 1=101ms, 2=402ms, or 3=manual)</label>
         <div class="col-sm-3">
