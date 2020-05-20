@@ -21,66 +21,21 @@ require_once __DIR__  . '/../../../../core/php/core.inc.php';
 
 class TSL2561 extends eqLogic
 {
-    /*     * *************************Attributs****************************** */
-
-
-
-    /*     * ***********************Methode static*************************** */
 
     /* Fonction exécutée automatiquement toutes les minutes par Jeedom*/
-    /*      public static function cron() {
-        foreach (self::byType('TSL2561') as $TSL2561) { //parcours tous les équipements du plugin vdm
-            if ($TSL2561->getIsEnable() == 1) { //vérifie que l'équipement est actif
-                $cmd = $TSL2561->getCmd(null, 'refresh'); //retourne la commande "refresh si elle existe
-                if (!is_object($cmd)) { //Si la commande n'existe pas
-                    continue; //continue la boucle
-                }
-                $cmd->execCmd(); // la commande existe on la lance
-            }
-        }
-      }
-      */
-    public function event(){
-        foreach (eqLogic::byType('TSL2561') as $eqLogic) {
-            if ($eqLogic->getId() == init('id')) {
-                $eqLogic->scan();
-            }
-        }
-    }
+ 
     public static function cron(){
         foreach (eqLogic::byType('TSL2561') as $eqLogic) {
             if ($eqLogic->getIsEnable() == 1) {
                 foreach ($eqLogic->getCmd('info') as $cmd) {
-
-                    log::add('monhistory', 'info', 'Cron lancé');
-                    $value = $cmd->formatValue($cmd->execute());
-
-                    if ($cmd->execCmd(null, 2) != $value) {
-
-                        $cmd->event($value);
-                    }
+                    log::add('TSL2561', 'debug', 'Cron lancé');
+                  $cmd->execute();
+                   
                 }
             }
         }
     }
-    /*
-     * Fonction exécutée automatiquement toutes les heures par Jeedom
-      public static function cronHourly() {
-
-      }
-     */
-
-    /*
-     * Fonction exécutée automatiquement tous les jours par Jeedom
-      public static function cronDaily() {
-
-      }
-     */
-
-
-
-    /*     * *********************Méthodes d'instance************************* */
-
+    
     public function preInsert()
     {
     }
@@ -128,16 +83,6 @@ class TSL2561 extends eqLogic
         $info->setSubType('numeric');
         $info->save();
 
-        $refresh = $this->getCmd(null, 'refresh');
-        if (!is_object($refresh)) {
-            $refresh = new TSL2561Cmd();
-            $refresh->setName(__('Rafraichir', __FILE__));
-        }
-        $refresh->setEqLogic_id($this->getId());
-        $refresh->setLogicalId('refresh');
-        $refresh->setType('action');
-        $refresh->setSubType('other');
-        $refresh->save();
     }
 
     public function preUpdate()
@@ -146,10 +91,6 @@ class TSL2561 extends eqLogic
 
     public function postUpdate()
     {
-        $cmd = $this->getCmd(null, 'refresh'); // On recherche la commande refresh de l’équipement
-        if (is_object($cmd)) { //elle existe et on lance la commande
-            $cmd->execCmd();
-        }
     }
 
     public function preRemove()
@@ -178,12 +119,13 @@ class TSL2561 extends eqLogic
 
     public function getlux()
     {
-        /*    $gain = $this->getConfiguration('gain');
+        $gain = $this->getConfiguration('gain');
         $inte_time = $this->getConfiguration('integration_time');
         $lux = exec(system::getCmdSudo() . 'python3 html/plugins/TSL2561/core/py/./TSL2561.py '. $gain .' '. $inte_time .' 1');
         log::add('TSL2561', 'debug', 'getLux');
-        return $lux;*/
-        return 10;
+        return $lux;
+        /*log::add('TSL2561', 'debug', 'getLux');
+        return 30;*/
     }
 
     public function getbroadband()
@@ -193,7 +135,8 @@ class TSL2561 extends eqLogic
         $broadband = exec(system::getCmdSudo() . 'python3 html/plugins/TSL2561/core/py/./TSL2561.py '. $gain .' '. $inte_time .' 2');
         log::add('TSL2561', 'debug', 'getBroadband');
         return $broadband; */
-        return 50;
+      	log::add('TSL2561', 'debug', 'getBroadband');
+        return 250;
     }
 
     public function getinfrared()
@@ -203,7 +146,8 @@ class TSL2561 extends eqLogic
         $infrared = exec(system::getCmdSudo() . 'python3 html/plugins/TSL2561/core/py/./TSL2561.py '. $gain .' '. $inte_time .' 3');
         log::add('TSL2561', 'debug', 'getInfrared');
         return $infrared; */
-        return 20;
+      	log::add('TSL2561', 'debug', 'getInfrared');
+        return 100;
     }
 
     /*     * **********************Getteur Setteur*************************** */
@@ -211,32 +155,24 @@ class TSL2561 extends eqLogic
 
 class TSL2561Cmd extends cmd
 {
-    /*     * *************************Attributs****************************** */
-
-
-    /*     * ***********************Methode static*************************** */
-
-
-    /*     * *********************Methode d'instance************************* */
-
-    /*
-     * Non obligatoire permet de demander de ne pas supprimer les commandes même si elles ne sont pas dans la nouvelle configuration de l'équipement envoyé en JS
-      public function dontRemoveCmd() {
-      return true;
-      }
-     */
 
     public function execute($_options = array())
     {
-        log::add('TLS2561', 'debug', 'fonction execute');
         $eqlogic = $this->getEqLogic(); //récupère l'éqlogic de la commande $this
-        $info = $eqlogic->getlux();  //On lance la fonction randomVdm() pour récupérer une vdm et on la stocke dans la variable $info
-        log::add('TLS2561', 'debug', 'eqlogic ' . $eqlogic->getname() . 'Info ' . $info);
-        $eqlogic->checkAndUpdateCmd('Lux', $info); // on met à jour la commande avec le LogicalId de l'eqlogic
-        $info = $eqlogic->getbroadband();
-        $eqlogic->checkAndUpdateCmd('Broadband', $info); // on met à jour la commande avec le LogicalId de l'eqlogic
-        $info = $eqlogic->getinfrared();
-        $eqlogic->checkAndUpdateCmd('Infrared', $info);
+      	switch ($this->getLogicalId()) {    //vérifie le logicalid de la commande
+          case 'Lux':
+        	$info = $eqlogic->getlux();  //On lance la fonction randomVdm() pour récupérer une vdm et on la stocke dans la variable $info
+        	$eqlogic->checkAndUpdateCmd('Lux', $info); // on met à jour la commande avec le LogicalId de l'eqlogic.
+            break;
+          case 'Broadband':
+        	$info = $eqlogic->getbroadband();
+        	$eqlogic->checkAndUpdateCmd('Broadband', $info); // on met à jour la commande avec le LogicalId de l'eqlogic
+            break;
+            case 'Infrared':
+        		$info = $eqlogic->getinfrared();
+             	$eqlogic->checkAndUpdateCmd('Infrared', $info);
+            break;
+        }
     }
 
     /*     * **********************Getteur Setteur*************************** */
