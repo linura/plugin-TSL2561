@@ -30,14 +30,14 @@ class TSL2561 extends eqLogic {
       public static function cron() {
         foreach (self::byType('TSL2561') as $TSL2561) { //parcours tous les équipements du plugin vdm
             if ($TSL2561->getIsEnable() == 1) { //vérifie que l'équipement est actif
-                foreach ($TSL2561->getCmd('info') as $cmd) {
-                    log::add('TSL2561', 'debug', 'cron execute ');
-                    $cmd->execCmd(); // la commande existe on la lance
+                $cmd = $TSL2561->getCmd(null, 'refresh'); //retourne la commande "refresh si elle existe
+                if (!is_object($cmd)) { //Si la commande n'existe pas
+                    continue; //continue la boucle
                 }
+                $cmd->execCmd(); // la commande existe on la lance
             }
         }
       }
-
 
     /*
      * Fonction exécutée automatiquement toutes les heures par Jeedom
@@ -102,6 +102,17 @@ class TSL2561 extends eqLogic {
         $info->setType('info');
         $info->setSubType('numeric');
         $info->save();
+
+        $refresh = $this->getCmd(null, 'refresh');
+        if (!is_object($refresh)) {
+            $refresh = new TSL2561Cmd();
+            $refresh->setName(__('Rafraichir', __FILE__));
+        }
+        $refresh->setEqLogic_id($this->getId());
+        $refresh->setLogicalId('refresh');
+        $refresh->setType('action');
+        $refresh->setSubType('other');
+        $refresh->save();
     }
 
     public function preUpdate() {
@@ -109,7 +120,10 @@ class TSL2561 extends eqLogic {
     }
 
     public function postUpdate() {
-        
+        $cmd = $this->getCmd(null, 'refresh'); // On recherche la commande refresh de l’équipement
+        if (is_object($cmd)) { //elle existe et on lance la commande
+            $cmd->execCmd();
+        }
     }
 
     public function preRemove() {
