@@ -60,8 +60,10 @@ infrared = tsl.infrared
 lux = tsl.lux
 nb_decimal = int( sys.argv[4] )
 # Print results
+#if interest == 1:
+#    print("{:06." + nb_decimal + "f}".format(lux))
 if interest == 1:
-    print("{:06." + nb_decimal + "f}".format(lux))
+    print("{:0.2f}".format(lux))
 if interest == 2:
     print("{}".format(broadband))
 if interest == 3:
