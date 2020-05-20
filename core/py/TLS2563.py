@@ -1,54 +1,70 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# 
+###################################################################################################
+#
+# This file is part of Jeedom.
+#
+# Jeedom is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Jeedom is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
+#
+###################################################################################################
+# 
+# LEBANSAIS C 
+# 20/05/2020
+
+# argument 1 type de sonde gain -> 0=1x, 1=16x
+# argument 2 integration time (0=13.7ms, 1=101ms, 2=402ms, or 3=manual)
+# argument 3 lecture souhaitée 1 - lux 2 broadband 3 infrared
+
 import time
 import board
 import busio
 import adafruit_tsl2561
+import sys
  
+
+GAIN = int( sys.argv[1] )
+integration_time = int( sys.argv[2] )
+interest = int( sys.argv[3] )
 # Create the I2C bus
 i2c = busio.I2C(board.SCL, board.SDA)
  
 # Create the TSL2561 instance, passing in the I2C bus
 tsl = adafruit_tsl2561.TSL2561(i2c)
  
-# Print chip info
-print("Chip ID = {}".format(tsl.chip_id))
-print("Enabled = {}".format(tsl.enabled))
-print("Gain = {}".format(tsl.gain))
-print("Integration time = {}".format(tsl.integration_time))
- 
-print("Configuring TSL2561...")
- 
 # Enable the light sensor
 tsl.enabled = True
 time.sleep(1)
  
 # Set gain 0=1x, 1=16x
-tsl.gain = 0
+tsl.gain = GAIN
  
 # Set integration time (0=13.7ms, 1=101ms, 2=402ms, or 3=manual)
-tsl.integration_time = 1
- 
-print("Getting readings...")
+tsl.integration_time = integration_time
  
 # Get raw (luminosity) readings individually
 broadband = tsl.broadband
 infrared = tsl.infrared
- 
-# Get raw (luminosity) readings using tuple unpacking
-# broadband, infrared = tsl.luminosity
- 
-# Get computed lux value (tsl.lux can return None or a float)
 lux = tsl.lux
  
 # Print results
-print("Enabled = {}".format(tsl.enabled))
-print("Gain = {}".format(tsl.gain))
-print("Integration time = {}".format(tsl.integration_time))
-print("Broadband = {}".format(broadband))
-print("Infrared = {}".format(infrared))
-if lux is not None:
-    print("Lux = {}".format(lux))
-else:
-    print("Lux value is None. Possible sensor underrange or overrange.")
- 
+if interest == 3:
+    print("{}".format(lux))
+if interest == 2:
+    print("{}".format(broadband))
+if interest == 3:
+    print("{}".format(infrared))
+
 # Disble the light sensor (to save power)
 tsl.enabled = False
