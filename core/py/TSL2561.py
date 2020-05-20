@@ -58,7 +58,7 @@ tsl.integration_time = integration_time
 broadband = tsl.broadband
 infrared = tsl.infrared
 lux = tsl.lux
-nb_decimal = int( sys.argv[4] )
+#nb_decimal = int( sys.argv[4] )
 # Print results
 #if interest == 1:
 #    print("{:06." + nb_decimal + "f}".format(lux))
