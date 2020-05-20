@@ -60,11 +60,11 @@ lux = tsl.lux
  
 # Print results
 if interest == 3:
-    print("{0:0.1f}".format(lux))
+    print("{}".format(lux))
 if interest == 2:
-    print("{0:0.1f}".format(broadband))
+    print("{}".format(broadband))
 if interest == 3:
-    print("{0:0.1f}".format(infrared))
+    print("{}".format(infrared))
 
 # Disble the light sensor (to save power)
 tsl.enabled = False
