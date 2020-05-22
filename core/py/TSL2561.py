@@ -26,7 +26,7 @@
 # argument 1 type de sonde gain -> 0=1x, 1=16x
 # argument 2 integration time (0=13.7ms, 1=101ms, 2=402ms, or 3=manual)
 # argument 3 lecture souhaitée 1 - lux 2 broadband 3 infrared
-# argument 4 nombre de decimal pour lux
+# argument 4 nombre de decimal pour lux evolution future
 
 import time
 import board
@@ -34,34 +34,32 @@ import busio
 import adafruit_tsl2561
 import sys
  
-
+# lecture des arguments passés à la commande pour initialisé nos variables
 GAIN = int( sys.argv[1] )
 integration_time = int( sys.argv[2] )
 interest = int( sys.argv[3] )
-# Create the I2C bus
+
+# Initialisation du bus I2C
 i2c = busio.I2C(board.SCL, board.SDA)
  
-# Create the TSL2561 instance, passing in the I2C bus
+# Creation de l'instance TSL2561 dans le bus I2C
 tsl = adafruit_tsl2561.TSL2561(i2c)
  
-# Enable the light sensor
+# activation du capteur de lumière
 tsl.enabled = True
-time.sleep(1)
+time.sleep(1) #pause pour attendre l'initialisation physique du capteur
  
-# Set gain 0=1x, 1=16x
+# init gain 0=1x, 1=16x
 tsl.gain = GAIN
  
-# Set integration time (0=13.7ms, 1=101ms, 2=402ms, or 3=manual)
+# int integration time (0=13.7ms, 1=101ms, 2=402ms, or 3=manual)
 tsl.integration_time = integration_time
  
-# Get raw (luminosity) readings individually
+# lecture individuel des données
 broadband = tsl.broadband
 infrared = tsl.infrared
 lux = tsl.lux
-#nb_decimal = int( sys.argv[4] )
-# Print results
-#if interest == 1:
-#    print("{:06." + nb_decimal + "f}".format(lux))
+
 if interest == 1:
     print("{:0.2f}".format(lux))
 if interest == 2:
@@ -69,5 +67,5 @@ if interest == 2:
 if interest == 3:
     print("{}".format(infrared))
 
-# Disble the light sensor (to save power)
+# désactivation du capteur de luminsité pour economie d'energie
 tsl.enabled = False
