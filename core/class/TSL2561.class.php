@@ -59,7 +59,6 @@ class TSL2561 extends eqLogic
         $info->setEqLogic_id($this->getId());
         $info->setType('info');
         $info->setSubType('numeric');
-        $info->setTemplate('dashboard','core::cmd.info.numeric.horizontal');
         $info->save();
 
         $info = $this->getCmd(null, 'Broadband');
